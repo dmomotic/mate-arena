@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../componentes/Logo.jsx'
-import { leerJugador, registrarPartida, XP_POR_ACIERTO } from '../datos/jugador.js'
+import { leerJugador, registrarPartida, sincronizar, XP_POR_ACIERTO } from '../datos/jugador.js'
 import { armarPartida } from '../datos/partida.js'
 import '../estilos/partida.css'
 
@@ -45,6 +45,7 @@ export default function Partida() {
       return
     }
     registrarPartida(retos.map((r, k) => ({ area: r.area, acierto: log[k] === true })))
+    sincronizar()
     setTerminada(true)
     window.scrollTo(0, 0)
   }

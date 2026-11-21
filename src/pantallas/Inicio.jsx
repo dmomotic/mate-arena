@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { leerJugador } from '../datos/jugador.js'
-import { COLEGIOS, ligaCon, rivalesDe } from '../datos/ranking.js'
+import { useColegios, useLiga } from '../datos/ranking.js'
 import '../estilos/inicio.css'
 
 const DURACION_CONTEO = 1400
-const CADA_SUBIDA = 4500
 
 function Fila({ puesto, nombre, sub, tu, pts, t, intro, subio, tick }) {
   const suavizado = 1 - Math.pow(1 - t, 3)
@@ -15,7 +14,7 @@ function Fila({ puesto, nombre, sub, tu, pts, t, intro, subio, tick }) {
   if (subio) clase += tick % 2 ? ' fila-flash-a' : ' fila-flash-b'
   else if (intro) clase += ' fila-entra'
   return (
-    <li className={clase} style={intro && !subio ? { animationDelay: (puesto - 1) * 90 + 'ms' } : undefined}>
+    <li className={clase} style={intro && !subio ? { animationDelay: Math.min(puesto - 1, 5) * 90 + 'ms' } : undefined}>
       <span className="fila-puesto">{puesto}</span>
       <span className="fila-quien">
         <span className="fila-nombre">
@@ -32,11 +31,12 @@ function Fila({ puesto, nombre, sub, tu, pts, t, intro, subio, tick }) {
 
 export default function Inicio() {
   const [jugador] = useState(leerJugador)
-  const [rivales, setRivales] = useState(() => rivalesDe(jugador))
-  const rivalesRef = useRef(rivales)
+  const { liga, enVivo } = useLiga(jugador)
+  const colegios = useColegios()
   const [t, setT] = useState(0)
   const [intro, setIntro] = useState(true)
   const [subida, setSubida] = useState({ nombre: null, tick: 0 })
+  const ordenPrevio = useRef(null)
 
   useEffect(() => {
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
@@ -51,30 +51,27 @@ export default function Inicio() {
       if (avance < 1) cuadro = requestAnimationFrame(paso)
       else setIntro(false)
     })
-
-    /* Cada 4.5 s un rival supera al de arriba. El jugador real nunca recibe puntos inventados. */
-    const reloj = setInterval(() => {
-      const visibles = window.matchMedia('(min-width: 768px)').matches ? 5 : 3
-      const ps = rivalesRef.current
-      const tope = Math.min(ps.length - 1, visibles)
-      if (tope < 1) return
-      const k = 1 + Math.floor(Math.random() * tope)
-      const copia = [...ps]
-      const sube = { ...ps[k], pts: ps[k - 1].pts + 5 + Math.floor(Math.random() * 30) }
-      copia[k] = ps[k - 1]
-      copia[k - 1] = sube
-      rivalesRef.current = copia
-      setRivales(copia)
-      setSubida((s) => ({ nombre: sube.nombre, tick: s.tick + 1 }))
-    }, CADA_SUBIDA)
-
-    return () => {
-      cancelAnimationFrame(cuadro)
-      clearInterval(reloj)
-    }
+    return () => cancelAnimationFrame(cuadro)
   }, [])
 
-  const liga = ligaCon(jugador, rivales)
+  /* Cuando llegan datos nuevos, resalta al jugador que superó a otro. */
+  useEffect(() => {
+    if (!enVivo) return
+    const orden = liga.map((f) => f.nombre)
+    const previo = ordenPrevio.current
+    ordenPrevio.current = orden
+    if (!previo) return
+    const quien = orden.find((nombre, i) => {
+      const antes = previo.indexOf(nombre)
+      return antes !== -1 && i < antes
+    })
+    if (quien) setSubida((s) => ({ nombre: quien, tick: s.tick + 1 }))
+  }, [liga, enVivo])
+
+  /* Top 5 y, si el jugador quedó más abajo, su fila con su puesto real. */
+  const visibles = liga
+    .map((f, i) => ({ ...f, puesto: i + 1 }))
+    .filter((f) => f.puesto <= 5 || f.tu)
 
   return (
     <div className="inicio">
@@ -111,8 +108,8 @@ export default function Inicio() {
             <span className="top-nota">Puntaje promedio</span>
           </div>
           <ol className="top-lista">
-            {COLEGIOS.map((c, i) => (
-              <Fila key={c.nombre} puesto={i + 1} nombre={c.nombre} pts={c.pts} t={t} intro={intro} />
+            {colegios.slice(0, 5).map((c, i) => (
+              <Fila key={c.nombre} puesto={i + 1} nombre={c.nombre} pts={c.puntaje} t={t} intro={intro} />
             ))}
           </ol>
         </div>
@@ -123,17 +120,17 @@ export default function Inicio() {
             <span className="top-nota">Puntos acumulados</span>
           </div>
           <ol className="top-lista">
-            {liga.map((j, i) => (
+            {visibles.map((j) => (
               <Fila
                 key={j.nombre}
-                puesto={i + 1}
+                puesto={j.puesto}
                 nombre={j.nombre}
                 sub={j.colegio}
                 tu={j.tu}
                 pts={j.pts}
                 t={t}
                 intro={intro}
-                subio={!j.tu && subida.nombre === j.nombre}
+                subio={subida.nombre === j.nombre}
                 tick={subida.tick}
               />
             ))}

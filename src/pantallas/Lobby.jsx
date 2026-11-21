@@ -1,16 +1,29 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../componentes/Logo.jsx'
-import { leerJugador, nivelDe, poderMasBajo, rachaVigente, XP_POR_NIVEL } from '../datos/jugador.js'
-import { posicionEnLiga } from '../datos/ranking.js'
+import { leerJugador, nivelDe, poderMasBajo, rachaVigente, sincronizar, XP_POR_NIVEL } from '../datos/jugador.js'
+import { posicionEn, useLiga } from '../datos/ranking.js'
 import '../estilos/lobby.css'
 
 export default function Lobby() {
-  const [jugador] = useState(leerJugador)
+  const [jugador, setJugador] = useState(leerJugador)
+  const { liga } = useLiga(jugador)
+
+  /* Sube a la base cualquier XP que haya quedado sin enviar. */
+  useEffect(() => {
+    let vivo = true
+    sincronizar().then((j) => {
+      if (vivo) setJugador(j)
+    })
+    return () => {
+      vivo = false
+    }
+  }, [])
+
   const nivel = nivelDe(jugador.xpTotal)
   const xpNivel = jugador.xpTotal % XP_POR_NIVEL
   const racha = rachaVigente(jugador)
-  const { posicion, faltan } = posicionEnLiga(jugador)
+  const { posicion, faltan } = posicionEn(liga)
 
   return (
     <div className="lobby">
@@ -49,6 +62,7 @@ export default function Lobby() {
           </Link>
         </section>
 
+        {posicion > 0 && (
         <Link to="/" className="liga">
           <span className="liga-posicion">
             Vas <span className="liga-numero">{posicion}.º</span> en tu liga
@@ -57,6 +71,7 @@ export default function Lobby() {
             <span className="liga-faltan">Te faltan {faltan} XP para el {posicion - 1}.º lugar</span>
           )}
         </Link>
+        )}
       </main>
     </div>
   )
