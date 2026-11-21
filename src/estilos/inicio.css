@@ -1,0 +1,225 @@
+.inicio {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 16px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.inicio-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.temporada { font-size: 12px; font-weight: 600; letter-spacing: 0.12em; color: var(--texto-2); }
+.entrar {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 2px solid var(--borde);
+  border-radius: 12px;
+  color: var(--texto);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+}
+.entrar:hover { color: var(--texto); }
+
+.heroe { margin-top: 8px; display: flex; flex-direction: column; gap: 32px; }
+.heroe-logo {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  font-family: var(--titulos);
+  font-weight: 700;
+  font-size: clamp(52px, 18.5vw, 72px);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+}
+.heroe-arena {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  margin-left: 6px;
+  padding: 4px 18px 8px;
+  background: var(--lima);
+  color: var(--fondo);
+  border-radius: 12px;
+  transform: skewX(-8deg);
+  box-shadow: var(--sombra-logo) var(--sombra-logo) 0 var(--violeta);
+  animation: glow 2.8s ease-in-out infinite;
+}
+.heroe-destello {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 28%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.65);
+  transform: translateX(-160%) skewX(-20deg);
+  animation: sheen 4.5s ease-in-out infinite;
+}
+.heroe-jugar { min-height: 60px; font-size: 20px; animation: pulse 2s ease-out infinite; }
+
+.trono { margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
+.trono-titulo { margin: 0; font-family: var(--titulos); font-weight: 700; font-size: 32px; line-height: 1.1; }
+.trono-linea { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: var(--naranja); }
+
+.tops { display: flex; flex-direction: column; gap: 24px; }
+
+.top {
+  min-width: 0;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.top-colegios { --acento: var(--lima); }
+.top-jugadores { --acento: var(--violeta); }
+.top-cabecera { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.top-titulo { margin: 0; font-family: var(--titulos); font-size: 20px; }
+.top-nota { font-size: 12px; color: var(--texto-2); }
+.top-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+
+.fila {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 36px;
+  padding: 10px 12px;
+  background: var(--fondo);
+  border: 2px solid transparent;
+  border-radius: 12px;
+}
+.top-jugadores .fila { padding: 8px 12px; }
+.fila-primera { border-color: var(--acento); }
+.fila-entra { animation: rowIn 0.5s ease both; }
+.fila-flash-a { animation: flashA 1.2s ease; }
+.fila-flash-b { animation: flashB 1.2s ease; }
+
+/* Móvil: tres filas por tarjeta; la del jugador real se muestra siempre. */
+.fila:nth-child(n + 4):not(.fila-tu) { display: none; }
+
+.fila-puesto {
+  width: 22px;
+  flex-shrink: 0;
+  font-family: var(--titulos);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--texto-2);
+}
+.fila-quien { flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.fila-nombre { font-weight: 600; font-size: 15px; }
+.fila-marca { color: var(--violeta); }
+.fila-sub { font-size: 12px; color: var(--texto-2); }
+.fila-subio {
+  padding: 2px 6px;
+  background: var(--lima);
+  color: var(--fondo);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.fila-pts {
+  font-family: var(--titulos);
+  font-weight: 700;
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+}
+.fila-primera .fila-puesto,
+.fila-primera .fila-pts { color: var(--acento); }
+
+.pie {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--borde);
+  font-size: 13px;
+  color: var(--texto-2);
+}
+.pie-enlace { display: inline-flex; align-items: center; min-height: 44px; }
+.pie-firma { display: none; }
+
+@media (min-width: 768px) {
+  .inicio { padding: 0; gap: 0; }
+  .inicio-cabecera,
+  .heroe,
+  .trono,
+  .tops,
+  .pie-interior {
+    width: 100%;
+    max-width: 1120px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .inicio-cabecera { padding: 20px 24px; flex-wrap: wrap; gap: 16px; }
+  .temporada { font-size: 13px; letter-spacing: 0.14em; }
+  .entrar { padding: 0 20px; }
+
+  .heroe {
+    margin-top: 0;
+    padding: 40px 24px 56px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+  }
+  .heroe-logo {
+    flex: 1 1 520px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 20px;
+    font-size: clamp(56px, 9vw, 120px);
+  }
+  .heroe-arena { margin-left: 0; padding: 4px 22px 8px; border-radius: 14px; }
+  .heroe-jugar { padding: 0 36px; }
+
+  .trono {
+    margin-top: 0;
+    padding: 8px 24px 20px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .trono-titulo { font-size: 40px; }
+  .trono-linea { font-size: 14px; }
+
+  .tops { padding: 0 24px 56px; flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
+  .top { flex: 1 1 420px; border-radius: 20px; padding: 24px; gap: 16px; }
+  .top-titulo { font-size: 24px; }
+  .top-nota { font-size: 13px; }
+
+  .fila { gap: 14px; min-height: 40px; padding: 14px 16px; border-radius: 14px; }
+  .top-jugadores .fila { padding: 10px 16px; }
+  .fila:nth-child(n + 4):not(.fila-tu) { display: flex; }
+  .fila:nth-child(n + 6):not(.fila-tu) { display: none; }
+  .fila-puesto { width: 28px; font-size: 20px; }
+  .fila-nombre { font-size: 16px; }
+  .fila-sub { font-size: 13px; }
+  .fila-subio { padding: 3px 8px; font-size: 12px; }
+  .fila-pts { font-size: 19px; }
+
+  .pie { margin-top: 0; padding-top: 0; font-size: 14px; }
+  .pie-interior {
+    padding: 20px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .pie-firma { display: inline; }
+}
