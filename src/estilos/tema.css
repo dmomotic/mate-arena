@@ -1,0 +1,147 @@
+:root {
+  --fondo: #0E1022;
+  --superficie: #191C38;
+  --superficie-hover: #20244A;
+  --borde: #2C3160;
+  --texto: #F2F3FF;
+  --texto-2: #A9AED6;
+  --lima: #C6F432;
+  --lima-claro: #E2FF7A;
+  --violeta: #9B85FF;
+  --naranja: #FF9F1C;
+  --cian: #38D6FF;
+
+  --titulos: 'Chakra Petch', sans-serif;
+  --cuerpo: Inter, system-ui, sans-serif;
+
+  /* Medidas de animación: valores del diseño móvil */
+  --entrada-x: 32px;
+  --pulso: 16px;
+  --brillo-tarjeta: 30px;
+  --sombra-logo: 8px;
+  --brillo-logo: 34px;
+  --salto-fila: 22px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --entrada-x: 40px;
+    --pulso: 18px;
+    --brillo-tarjeta: 36px;
+    --sombra-logo: 10px;
+    --brillo-logo: 42px;
+    --salto-fila: 26px;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: var(--cuerpo);
+  overflow-x: hidden;
+}
+
+a { color: var(--lima); }
+a:hover { color: var(--lima-claro); }
+
+button { font-family: inherit; cursor: pointer; }
+button:disabled { cursor: default; }
+
+:focus-visible { outline: 3px solid var(--cian); outline-offset: 3px; }
+
+/* ---------- Piezas compartidas ---------- */
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--texto);
+  text-decoration: none;
+  font-family: var(--titulos);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+}
+.logo:hover { color: var(--texto); }
+.logo-arena {
+  display: inline-block;
+  padding: 1px 8px 2px;
+  background: var(--lima);
+  color: var(--fondo);
+  border-radius: 6px;
+  transform: skewX(-8deg);
+}
+
+.boton-primario {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 0 24px;
+  background: var(--lima);
+  color: var(--fondo);
+  border: 0;
+  border-radius: 14px;
+  text-decoration: none;
+  font-family: var(--titulos);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.04em;
+  transition: transform 0.18s ease;
+}
+.boton-primario:hover { color: var(--fondo); }
+.boton-primario:active { transform: scale(0.98); }
+
+.boton-secundario {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 24px;
+  border: 2px solid var(--borde);
+  border-radius: 14px;
+  color: var(--texto);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+}
+.boton-secundario:hover { color: var(--texto); }
+
+@media (min-width: 768px) {
+  .logo { gap: 10px; font-size: 20px; }
+}
+
+@media (hover: hover) {
+  .boton-primario:hover { transform: translateY(-3px); }
+}
+
+/* ---------- Keyframes del diseño ---------- */
+
+@keyframes qIn { from { opacity: 0; transform: translateX(var(--entrada-x)); } to { opacity: 1; transform: none; } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes pop { 0% { transform: scale(1); } 45% { transform: scale(1.04); } 100% { transform: scale(1); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 50% { transform: translateX(7px); } 75% { transform: translateX(-4px); } }
+@keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
+@keyframes zoomIn { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: none; } }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(198, 244, 50, 0.55); } 70%, 100% { box-shadow: 0 0 0 var(--pulso) rgba(198, 244, 50, 0); } }
+@keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes cardGlow { 0%, 100% { box-shadow: 0 0 0 rgba(198, 244, 50, 0); } 50% { box-shadow: 0 0 var(--brillo-tarjeta) rgba(198, 244, 50, 0.28); } }
+@keyframes glow {
+  0%, 100% { box-shadow: var(--sombra-logo) var(--sombra-logo) 0 var(--violeta), 0 0 0 rgba(198, 244, 50, 0); }
+  50% { box-shadow: var(--sombra-logo) var(--sombra-logo) 0 var(--violeta), 0 0 var(--brillo-logo) rgba(198, 244, 50, 0.55); }
+}
+@keyframes sheen { 0%, 70% { transform: translateX(-160%) skewX(-20deg); } 100% { transform: translateX(420%) skewX(-20deg); } }
+@keyframes rowIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes flashA { 0% { transform: translateY(var(--salto-fila)); background: var(--borde); } 60% { transform: none; background: var(--borde); } 100% { background: var(--fondo); } }
+@keyframes flashB { 0% { transform: translateY(var(--salto-fila)); background: var(--borde); } 60% { transform: none; background: var(--borde); } 100% { background: var(--fondo); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

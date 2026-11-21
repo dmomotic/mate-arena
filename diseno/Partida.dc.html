@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Mate Arena: partida</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0;background:#0E1022;font-family:Inter,system-ui,sans-serif;color:#F2F3FF}
+a{color:#C6F432}a:hover{color:#E2FF7A}
+button{font-family:inherit;cursor:pointer;transition:transform .18s ease,border-color .3s ease,background .3s ease}
+button:active:not(:disabled){transform:scale(.98)}
+@keyframes qInA{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:none}}
+@keyframes qInB{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}50%{transform:translateX(7px)}75%{transform:translateX(-4px)}}
+@keyframes bumpA{0%{transform:scale(1)}40%{transform:scale(1.25)}100%{transform:scale(1)}}
+@keyframes bumpB{0%{transform:scale(1)}40%{transform:scale(1.25)}100%{transform:scale(1)}}
+@keyframes zoomIn{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #0E1022; color: #F2F3FF; font-family: Inter, system-ui, sans-serif; padding: 24px 20px; display: flex; flex-direction: column; gap: 20px; overflow: hidden">
+
+<sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+<div style="font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.08em">RETO {{ num }} DE {{ total }}</div>
+<div style="padding: 6px 12px; background: #191C38; border-radius: 10px; color: #C6F432; font-weight: 700; font-size: 14px; animation: {{ xpAnim }}">{{ xp }} XP</div>
+</div>
+<div style="height: 10px; background: #191C38; border-radius: 999px; overflow: hidden"><div style="width: {{ pct }}; height: 100%; background: #C6F432; border-radius: 999px; transition: width 0.6s cubic-bezier(.2,.8,.2,1)"></div></div>
+
+<div style="background: #191C38; border: 1px solid #2C3160; border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 12px; animation: {{ qAnim }}">
+<div style="align-self: flex-start; padding: 4px 12px; border: 1px solid #9B85FF; border-radius: 999px; color: #9B85FF; font-size: 12px; font-weight: 600; letter-spacing: 0.08em">PODER: {{ area }}</div>
+<p style="margin: 0; font-size: 19px; line-height: 1.45; font-weight: 500">{{ text }}</p>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{ opts }}" as="o" hint-placeholder-count="4">
+<button type="button" onClick="{{ o.pick }}" disabled="{{ o.disabled }}" style="display: flex; align-items: center; gap: 14px; min-height: 60px; padding: 0 16px; background: #191C38; border: 2px solid {{ o.bd }}; border-radius: 14px; color: #F2F3FF; font-size: 18px; font-weight: 600; text-align: left; animation: {{ o.anim }}; animation-delay: {{ o.delay }}">
+<span style="width: 32px; height: 32px; flex-shrink: 0; border-radius: 8px; background: #0E1022; color: #A9AED6; display: flex; align-items: center; justify-content: center; font-family: 'Chakra Petch', sans-serif; font-size: 15px">{{ o.letter }}</span>
+<span style="flex-grow: 1">{{ o.label }}</span>
+<sc-if value="{{ o.hasTag }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; font-weight: 700; color: {{ o.bd }}">{{ o.tag }}</span></sc-if>
+</button>
+</sc-for>
+</div>
+
+<sc-if value="{{ answered }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 14px; animation: fadeUp 0.4s ease both">
+<div style="background: #191C38; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 6px">
+<div style="font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 18px; color: {{ verdictColor }}">{{ verdict }}</div>
+<div style="font-size: 15px; line-height: 1.45; color: #A9AED6">{{ why }}</div>
+</div>
+<button type="button" onClick="{{ next }}" style="min-height: 56px; background: #C6F432; color: #0E1022; border: 0; border-radius: 14px; font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.04em">{{ nextLabel }}</button>
+</div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding-top: 24px; text-align: center">
+<div style="font-size: 13px; font-weight: 600; letter-spacing: 0.1em; color: #A9AED6">PARTIDA TERMINADA</div>
+<div style="font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 64px; line-height: 1; color: #C6F432; animation: zoomIn 0.6s cubic-bezier(.2,1.4,.4,1) both">+{{ xp }} XP</div>
+<div style="font-size: 17px; color: #F2F3FF">{{ score }} de {{ total }} retos superados</div>
+</div>
+
+<div style="background: #191C38; border: 1px solid #2C3160; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="font-size: 13px; font-weight: 600; letter-spacing: 0.1em; color: #A9AED6">TUS PODERES EN ESTA PARTIDA</div>
+<sc-for list="{{ areas }}" as="a" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; background: #0E1022; border-radius: 12px; animation: fadeUp 0.45s ease both; animation-delay: {{ a.delay }}">
+<span style="font-size: 16px; font-weight: 600">{{ a.area }}</span>
+<span style="font-size: 14px; font-weight: 700; color: {{ a.color }}">{{ a.label }}</span>
+</div>
+</sc-for>
+</div>
+
+<sc-if value="{{ hasWeak }}" hint-placeholder-val="{{ true }}">
+<div style="background: #191C38; border: 2px solid #FF9F1C; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 8px; animation: fadeUp 0.5s ease 0.7s both">
+<div style="font-size: 13px; font-weight: 600; letter-spacing: 0.1em; color: #FF9F1C">TU PRÓXIMA MISIÓN</div>
+<div style="font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 22px">Entrena {{ weak }}</div>
+<div style="font-size: 15px; line-height: 1.45; color: #A9AED6">Ahí se te escapó un reto. Mejorarlo es lo que más XP te da en la liga.</div>
+</div>
+</sc-if>
+<sc-if value="{{ perfect }}" hint-placeholder-val="{{ false }}">
+<div style="background: #191C38; border: 2px solid #C6F432; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 8px">
+<div style="font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 22px">Partida perfecta</div>
+<div style="font-size: 15px; line-height: 1.45; color: #A9AED6">Superaste todos los retos. La siguiente partida sube de dificultad.</div>
+</div>
+</sc-if>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px">
+<button type="button" onClick="{{ restart }}" style="min-height: 56px; background: #C6F432; color: #0E1022; border: 0; border-radius: 14px; font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.04em">JUGAR OTRA VEZ</button>
+<a href="LobbyMovil.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 52px; border: 2px solid #2C3160; border-radius: 14px; color: #F2F3FF; text-decoration: none; font-weight: 600; font-size: 16px">Volver al lobby</a>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { i: 0, picked: null, log: [], done: false };
+}
+renderVals() {
+var self = this;
+var QS = [
+{ area: 'CANTIDAD', name: 'Cantidad', text: 'En la tienda, 3 bolsas de agua pura cuestan Q2. ¿Cuánto pagas por 12 bolsas?', opts: ['Q6', 'Q8', 'Q10', 'Q12'], ans: 1, why: '12 bolsas son 4 grupos de 3. Cada grupo cuesta Q2, así que 4 × 2 = Q8.' },
+{ area: 'CAMBIO Y RELACIONES', name: 'Cambio y relaciones', text: 'Un tuc tuc cobra Q5 por subirte más Q2 por cada kilómetro. ¿Cuánto cuesta un viaje de 6 km?', opts: ['Q12', 'Q15', 'Q17', 'Q30'], ans: 2, why: 'Son Q5 fijos más 6 × Q2 = Q12 por la distancia. En total, 5 + 12 = Q17.' },
+{ area: 'DATOS Y AZAR', name: 'Datos y azar', text: 'En el torneo de fut tu equipo anotó 2, 4, 1 y 5 goles en cuatro partidos. ¿Cuál es su promedio de goles por partido?', opts: ['2.5', '3', '3.5', '4'], ans: 1, why: 'Suma los goles: 2 + 4 + 1 + 5 = 12. Divide entre los 4 partidos: 12 ÷ 4 = 3.' }
+];
+var s = this.state;
+var q = QS[s.i];
+var answered = s.picked !== null;
+var correct = answered && s.picked === q.ans;
+var score = s.log.filter(function (x) { return x; }).length;
+var opts = q.opts.map(function (label, k) {
+var bd = '#2C3160', tag = '';
+if (answered && k === q.ans) { bd = '#C6F432'; tag = 'Correcta'; }
+else if (answered && k === s.picked) { bd = '#FF9F1C'; tag = 'Tu respuesta'; }
+return {
+label: label, letter: 'ABCD'.charAt(k), bd: bd, tag: tag, hasTag: tag !== '', disabled: answered,
+anim: answered ? (k === q.ans ? 'pop 0.45s ease' : (k === s.picked ? 'shake 0.4s ease' : 'none')) : (s.i % 2 ? 'qInB' : 'qInA') + ' 0.45s ease both',
+delay: answered ? '0ms' : (120 + k * 70) + 'ms',
+pick: function () { if (self.state.picked === null) self.setState({ picked: k, log: self.state.log.concat([k === q.ans]) }); }
+};
+});
+var weakIdx = s.log.indexOf(false);
+return {
+playing: !s.done, done: s.done,
+num: s.i + 1, total: QS.length, xp: score * 50,
+pct: Math.round(((s.i + (answered ? 1 : 0)) / QS.length) * 100) + '%',
+area: q.area, text: q.text, opts: opts, answered: answered,
+qAnim: (s.i % 2 ? 'qInB' : 'qInA') + ' 0.45s ease both',
+xpAnim: score > 0 ? (score % 2 ? 'bumpA' : 'bumpB') + ' 0.5s ease' : 'none',
+verdict: correct ? 'Reto superado · +50 XP' : 'Casi. Así se resuelve:',
+verdictColor: correct ? '#C6F432' : '#FF9F1C',
+why: q.why,
+nextLabel: s.i < QS.length - 1 ? 'SIGUIENTE RETO' : 'VER RESULTADOS',
+next: function () {
+if (self.state.i < QS.length - 1) self.setState({ i: self.state.i + 1, picked: null });
+else self.setState({ done: true });
+},
+score: score,
+areas: QS.map(function (x, k) { var ok = s.log[k] === true; return { area: x.name, label: ok ? 'Superado' : 'Por entrenar', color: ok ? '#C6F432' : '#FF9F1C', delay: (300 + k * 120) + 'ms' }; }),
+hasWeak: s.done && weakIdx !== -1,
+perfect: s.done && weakIdx === -1,
+weak: weakIdx !== -1 ? QS[weakIdx].name : '',
+restart: function () { self.setState({ i: 0, picked: null, log: [], done: false }); }
+};
+}
+}
+</script>
+</body>
+</html>

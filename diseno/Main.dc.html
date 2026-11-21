@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Mate Arena: inicio con rankings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0;background:#0E1022;font-family:Inter,system-ui,sans-serif;color:#F2F3FF}
+a{color:#C6F432}a:hover{color:#E2FF7A}
+@keyframes glow{0%,100%{box-shadow:10px 10px 0 #9B85FF,0 0 0 rgba(198,244,50,0)}50%{box-shadow:10px 10px 0 #9B85FF,0 0 42px rgba(198,244,50,.55)}}
+@keyframes sheen{0%,70%{transform:translateX(-160%) skewX(-20deg)}100%{transform:translateX(420%) skewX(-20deg)}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(198,244,50,.55)}70%,100%{box-shadow:0 0 0 18px rgba(198,244,50,0)}}
+@keyframes rowIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes flashA{0%{transform:translateY(26px);background:#2C3160}60%{transform:none;background:#2C3160}100%{background:#0E1022}}
+@keyframes flashB{0%{transform:translateY(26px);background:#2C3160}60%{transform:none;background:#2C3160}100%{background:#0E1022}}
+@media (prefers-reduced-motion: reduce){*{animation:none !important}}
+</style>
+</helmet>
+<div style="background: #0E1022; color: #F2F3FF; font-family: Inter, system-ui, sans-serif; min-height: 100vh">
+
+<header style="max-width: 1120px; margin: 0 auto; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<div style="font-size: 13px; font-weight: 600; letter-spacing: 0.14em; color: #A9AED6">TEMPORADA 1 · MATEMÁTICAS</div>
+<a href="Lobby.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border: 2px solid #2C3160; border-radius: 12px; color: #F2F3FF; text-decoration: none; font-weight: 600; font-size: 15px">Entrar</a>
+</header>
+
+<section style="max-width: 1120px; margin: 0 auto; padding: 40px 24px 56px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 28px">
+<h1 aria-label="Mate Arena" style="flex: 1 1 520px; margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: clamp(56px, 9vw, 120px); line-height: 0.95; letter-spacing: 0.02em">
+<span style="color: #F2F3FF">MATE</span>
+<span style="position: relative; overflow: hidden; display: inline-block; padding: 4px 22px 8px; background: #C6F432; color: #0E1022; border-radius: 14px; transform: skewX(-8deg); box-shadow: 10px 10px 0 #9B85FF; animation: glow 2.8s ease-in-out infinite">ARENA<span aria-hidden="true" style="position: absolute; top: 0; left: 0; width: 28%; height: 100%; background: rgba(255,255,255,0.65); animation: sheen 4.5s ease-in-out infinite"></span></span>
+</h1>
+<a href="PartidaWeb.dc.html" style="display: inline-flex; align-items: center; gap: 10px; min-height: 60px; padding: 0 36px; background: #C6F432; color: #0E1022; border-radius: 14px; text-decoration: none; font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 0.04em; animation: pulse 2s ease-out infinite">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="#0E1022"><path d="M6 4l14 8-14 8z"/></svg>JUGAR AHORA</a>
+</section>
+
+<div style="max-width: 1120px; margin: 0 auto; padding: 8px 24px 20px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px">
+<h2 style="margin: 0; font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 40px; line-height: 1.1">¿Quién manda?</h2>
+<span style="font-size: 14px; font-weight: 600; letter-spacing: 0.08em; color: #FF9F1C">EL TRONO SE DISPUTA CADA SEMANA</span>
+</div>
+
+<section style="max-width: 1120px; margin: 0 auto; padding: 0 24px 56px; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 24px">
+
+<div style="flex: 1 1 420px; min-width: 0; background: #191C38; border: 1px solid #2C3160; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px">
+<h3 style="margin: 0; font-family: 'Chakra Petch', sans-serif; font-size: 24px">Top colegios</h3>
+<span style="font-size: 13px; color: #A9AED6">Puntaje promedio</span>
+</div>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{ schools }}" as="r" hint-placeholder-count="5">
+<li style="display: flex; align-items: center; gap: 14px; min-height: 40px; padding: 14px 16px; background: #0E1022; border: 2px solid {{ r.bd }}; border-radius: 14px; animation: {{ r.anim }}; animation-delay: {{ r.delay }}"><span style="width: 28px; font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 20px; color: {{ r.rankColor }}">{{ r.rank }}</span><span style="flex-grow: 1; font-weight: 600; font-size: 16px">{{ r.name }}</span><span style="font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 19px; font-variant-numeric: tabular-nums; color: {{ r.ptsColor }}">{{ r.shown }}</span></li>
+</sc-for>
+</ol>
+</div>
+
+<div style="flex: 1 1 420px; min-width: 0; background: #191C38; border: 1px solid #2C3160; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px">
+<h3 style="margin: 0; font-family: 'Chakra Petch', sans-serif; font-size: 24px">Top jugadores</h3>
+<span style="font-size: 13px; color: #A9AED6">Puntos acumulados</span>
+</div>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{ players }}" as="r" hint-placeholder-count="5">
+<li style="display: flex; align-items: center; gap: 14px; min-height: 40px; padding: 10px 16px; background: #0E1022; border: 2px solid {{ r.bd }}; border-radius: 14px; animation: {{ r.anim }}; animation-delay: {{ r.delay }}"><span style="width: 28px; font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 20px; color: {{ r.rankColor }}">{{ r.rank }}</span><span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600; font-size: 16px">{{ r.name }}</span><span style="font-size: 13px; color: #A9AED6">{{ r.sub }}</span></span><sc-if value="{{ r.up }}" hint-placeholder-val="{{ false }}"><span style="padding: 3px 8px; background: #C6F432; color: #0E1022; border-radius: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em">SUBIÓ</span></sc-if><span style="font-family: 'Chakra Petch', sans-serif; font-weight: 700; font-size: 19px; font-variant-numeric: tabular-nums; color: {{ r.ptsColor }}">{{ r.shown }}</span></li>
+</sc-for>
+</ol>
+</div>
+
+</section>
+
+<footer style="border-top: 1px solid #2C3160">
+<div style="max-width: 1120px; margin: 0 auto; padding: 20px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 14px; color: #A9AED6">
+<span>¿Tu colegio no aparece? <a href="mailto:[SU CORREO DE CONTACTO]">Súmalo a la arena</a></span>
+<span>Mate Arena · Hecho en Guatemala</span>
+</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"vivo":{"editor":"boolean","default":true},"$preview":{"width":1440,"height":960}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = {
+t: 0, intro: true, tick: 0, flash: -1,
+players: [
+{ name: 'Ixchel_GT', sub: 'Colegio Ceiba Real', pts: 2940 },
+{ name: 'Balam22', sub: 'Liceo Monte Jade', pts: 2815 },
+{ name: 'Jaguar_15', sub: 'Colegio Ceiba Real', pts: 2760 },
+{ name: 'Quetzal_07', sub: 'Instituto Lago Azul', pts: 2590 },
+{ name: 'Kame_Mate', sub: 'Colegio Volcán Dorado', pts: 2470 }
+]
+};
+}
+componentDidMount() {
+var self = this;
+var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (still) { this.setState({ t: 1, intro: false }); return; }
+var start = Date.now();
+this.countTimer = setInterval(function () {
+var t = Math.min(1, (Date.now() - start) / 1400);
+self.setState({ t: t });
+if (t >= 1) { clearInterval(self.countTimer); self.setState({ intro: false }); }
+}, 40);
+this.swapTimer = setInterval(function () {
+if (self.props.vivo === false) return;
+var ps = self.state.players.slice();
+var k = 1 + Math.floor(Math.random() * (ps.length - 1));
+var mover = { name: ps[k].name, sub: ps[k].sub, pts: ps[k - 1].pts + 5 + Math.floor(Math.random() * 30) };
+ps[k] = ps[k - 1];
+ps[k - 1] = mover;
+self.setState({ players: ps, flash: k - 1, tick: self.state.tick + 1 });
+}, 4500);
+}
+componentWillUnmount() {
+clearInterval(this.countTimer);
+clearInterval(this.swapTimer);
+}
+renderVals() {
+var s = this.state;
+var eased = 1 - Math.pow(1 - s.t, 3);
+var rows = function (list, accent, flash) {
+return list.map(function (x, i) {
+var first = i === 0;
+var hit = flash === i;
+return {
+rank: i + 1, name: x.name, sub: x.sub || '',
+shown: Math.round(x.pts * eased).toLocaleString('en-US'),
+bd: first ? accent : 'transparent',
+rankColor: first ? accent : '#A9AED6',
+ptsColor: first ? accent : '#F2F3FF',
+up: hit,
+anim: hit ? (s.tick % 2 ? 'flashA' : 'flashB') + ' 1.2s ease' : (s.intro ? 'rowIn 0.5s ease both' : 'none'),
+delay: s.intro && !hit ? (i * 90) + 'ms' : '0ms'
+};
+});
+};
+var schools = [
+{ name: 'Colegio Ceiba Real', pts: 872 },
+{ name: 'Liceo Monte Jade', pts: 845 },
+{ name: 'Instituto Lago Azul', pts: 811 },
+{ name: 'Colegio Volcán Dorado', pts: 790 },
+{ name: 'Liceo Quetzal Norte', pts: 764 }
+];
+return { schools: rows(schools, '#C6F432', -1), players: rows(s.players, '#9B85FF', s.flash) };
+}
+}
+</script>
+</body>
+</html>
