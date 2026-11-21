@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { leerJugador } from '../datos/jugador.js'
 import { COLEGIOS, ligaCon, rivalesDe } from '../datos/ranking.js'
@@ -33,6 +33,7 @@ function Fila({ puesto, nombre, sub, tu, pts, t, intro, subio, tick }) {
 export default function Inicio() {
   const [jugador] = useState(leerJugador)
   const [rivales, setRivales] = useState(() => rivalesDe(jugador))
+  const rivalesRef = useRef(rivales)
   const [t, setT] = useState(0)
   const [intro, setIntro] = useState(true)
   const [subida, setSubida] = useState({ nombre: null, tick: 0 })
@@ -54,19 +55,17 @@ export default function Inicio() {
     /* Cada 4.5 s un rival supera al de arriba. El jugador real nunca recibe puntos inventados. */
     const reloj = setInterval(() => {
       const visibles = window.matchMedia('(min-width: 768px)').matches ? 5 : 3
-      let quien = null
-      setRivales((ps) => {
-        const tope = Math.min(ps.length - 1, visibles)
-        if (tope < 1) return ps
-        const k = 1 + Math.floor(Math.random() * tope)
-        const copia = [...ps]
-        const sube = { ...ps[k], pts: ps[k - 1].pts + 5 + Math.floor(Math.random() * 30) }
-        copia[k] = ps[k - 1]
-        copia[k - 1] = sube
-        quien = sube.nombre
-        return copia
-      })
-      setSubida((s) => ({ nombre: quien ?? s.nombre, tick: s.tick + 1 }))
+      const ps = rivalesRef.current
+      const tope = Math.min(ps.length - 1, visibles)
+      if (tope < 1) return
+      const k = 1 + Math.floor(Math.random() * tope)
+      const copia = [...ps]
+      const sube = { ...ps[k], pts: ps[k - 1].pts + 5 + Math.floor(Math.random() * 30) }
+      copia[k] = ps[k - 1]
+      copia[k - 1] = sube
+      rivalesRef.current = copia
+      setRivales(copia)
+      setSubida((s) => ({ nombre: sube.nombre, tick: s.tick + 1 }))
     }, CADA_SUBIDA)
 
     return () => {
